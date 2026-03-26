@@ -4,10 +4,12 @@ Tool: PDF 텍스트 추출기
 """
 
 import io
+import os
 import pdfplumber
 
 
 MAX_CHARS = 60000  # 토큰 한도 초과 방지용 최대 글자 수
+DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data")
 
 
 def extract_text_from_pdfs(uploaded_files: list) -> str:
@@ -38,6 +40,35 @@ def extract_text_from_pdfs(uploaded_files: list) -> str:
         combined = combined[:MAX_CHARS]
         combined += "\n\n[참고: 문서가 너무 길어 일부만 포함되었습니다. AI가 웹 검색으로 보완합니다.]"
 
+    return combined
+
+
+def load_default_pdfs() -> str:
+    """
+    data/ 폴더에 있는 PDF를 자동으로 읽어서 반환.
+    앱 시작 시 항상 기본 참고 자료로 포함됨.
+    """
+    if not os.path.exists(DATA_DIR):
+        return ""
+
+    pdf_files = [f for f in os.listdir(DATA_DIR) if f.lower().endswith(".pdf")]
+    if not pdf_files:
+        return ""
+
+    all_parts = []
+    for file_name in sorted(pdf_files):
+        file_path = os.path.join(DATA_DIR, file_name)
+        try:
+            with open(file_path, "rb") as f:
+                file_bytes = f.read()
+            extracted = _extract_from_bytes(file_bytes, file_name)
+            all_parts.append(f"=== 기본 자료: {file_name} ===\n{extracted}\n")
+        except Exception as e:
+            all_parts.append(f"=== 기본 자료: {file_name} ===\n[읽기 실패: {e}]\n")
+
+    combined = "\n".join(all_parts)
+    if len(combined) > MAX_CHARS:
+        combined = combined[:MAX_CHARS] + "\n[자료가 너무 길어 일부만 포함됨]"
     return combined
 
 

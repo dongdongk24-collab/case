@@ -9,8 +9,13 @@ import os
 
 sys.path.insert(0, os.path.dirname(__file__))
 
-from tools.pdf_reader import extract_text_from_pdfs
+from tools.pdf_reader import extract_text_from_pdfs, load_default_pdfs
 from tools.gemini_client import call_welfare_matching
+
+# 기본 PDF 자동 로드 (data/ 폴더)
+@st.cache_resource
+def get_default_pdf_text():
+    return load_default_pdfs()
 
 # ── 페이지 설정 ──────────────────────────────────────────────
 st.set_page_config(
@@ -121,6 +126,16 @@ with st.sidebar:
     st.markdown('<div class="section-label">📎 복지 자료 첨부 (선택)</div>', unsafe_allow_html=True)
     st.divider()
 
+    # 기본 PDF 로딩 상태 표시
+    default_text_preview = get_default_pdf_text()
+    if default_text_preview:
+        import os
+        data_dir = os.path.join(os.path.dirname(__file__), "data")
+        pdf_count = len([f for f in os.listdir(data_dir) if f.lower().endswith(".pdf")])
+        st.success(f"기본 자료 {pdf_count}개 자동 로드됨")
+    else:
+        st.caption("기본 자료 없음 (data/ 폴더 비어있음)")
+
     uploaded_files = st.file_uploader(
         "PDF 업로드",
         type=["pdf"],
@@ -178,7 +193,9 @@ else:
 
     with st.spinner("AI가 복지서비스를 분석 중입니다... (30초~1분 소요)"):
         try:
-            pdf_text = extract_text_from_pdfs(uploaded_files) if uploaded_files else ""
+            default_text = get_default_pdf_text()
+            upload_text = extract_text_from_pdfs(uploaded_files) if uploaded_files else ""
+            pdf_text = "\n\n".join(filter(None, [default_text, upload_text]))
             result = call_welfare_matching(client_data, pdf_text)
         except Exception as e:
             st.error(f"오류가 발생했습니다: {e}")
