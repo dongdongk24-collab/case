@@ -125,16 +125,7 @@ with st.sidebar:
     # ── PDF 첨부 ──
     st.markdown('<div class="section-label">📎 복지 자료 첨부 (선택)</div>', unsafe_allow_html=True)
     st.divider()
-
-    # 기본 PDF 로딩 상태 표시
-    default_text_preview = get_default_pdf_text()
-    if default_text_preview:
-        import os
-        data_dir = os.path.join(os.path.dirname(__file__), "data")
-        pdf_count = len([f for f in os.listdir(data_dir) if f.lower().endswith(".pdf")])
-        st.success(f"기본 자료 {pdf_count}개 자동 로드됨")
-    else:
-        st.caption("기본 자료 없음 (data/ 폴더 비어있음)")
+    st.caption("광진구 복지 자료 3개 기본 포함됨")
 
     uploaded_files = st.file_uploader(
         "PDF 업로드",
