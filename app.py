@@ -196,8 +196,3 @@ else:
 
     st.divider()
     st.markdown(result)
-    st.divider()
-
-    with st.expander("전체 보고서 복사하기"):
-        st.code(result, language=None)
-        st.caption("위 텍스트를 전체 선택(Ctrl+A) 후 복사하세요.")
