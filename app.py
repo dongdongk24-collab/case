@@ -36,6 +36,9 @@ st.markdown("""
         display: flex; align-items: center; gap: 6px;
     }
     section[data-testid="stSidebar"] { width: 340px !important; }
+    /* 사이드바 접기 버튼 아이콘 텍스트 숨기기 */
+    [data-testid="collapsedControl"] span { display: none; }
+    .material-symbols-rounded { display: none !important; }
 </style>
 """, unsafe_allow_html=True)
 
