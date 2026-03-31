@@ -125,7 +125,7 @@ with st.sidebar:
     # ── PDF 첨부 ──
     st.markdown('<div class="section-label">📎 복지 자료 첨부 (선택)</div>', unsafe_allow_html=True)
     st.divider()
-    st.caption("광진구 복지 자료 3개 기본 포함됨")
+    st.caption("각종 지침 45개의 자료가 기본 포함됨")
 
     uploaded_files = st.file_uploader(
         "PDF 업로드",
