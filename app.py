@@ -37,8 +37,20 @@ st.markdown("""
     }
     section[data-testid="stSidebar"] { width: 340px !important; }
     /* 사이드바 접기 버튼 아이콘 텍스트 숨기기 */
-    [data-testid="collapsedControl"] span { display: none; }
-    .material-symbols-rounded { display: none !important; }
+    [data-testid="stSidebarCollapseButton"] span,
+    [data-testid="collapsedControl"] span,
+    button[aria-label="Close sidebar"] span,
+    button[aria-label="Open sidebar"] span,
+    button[aria-label="Close sidebar"],
+    button[aria-label="Open sidebar"] {
+        font-size: 0 !important;
+        color: transparent !important;
+    }
+    .material-symbols-rounded {
+        font-size: 0 !important;
+        color: transparent !important;
+        width: 24px; height: 24px;
+    }
 </style>
 """, unsafe_allow_html=True)
 
