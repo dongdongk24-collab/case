@@ -12,10 +12,13 @@ sys.path.insert(0, os.path.dirname(__file__))
 from tools.pdf_reader import extract_text_from_pdfs, load_default_pdfs
 from tools.gemini_client import call_welfare_matching
 
-# 기본 PDF 자동 로드 (data/ 폴더)
-@st.cache_resource
+# 기본 PDF 자동 로드 (data/ 폴더) — 앱 시작 시 미리 캐시
+@st.cache_resource(show_spinner=False)
 def get_default_pdf_text():
     return load_default_pdfs()
+
+# 앱 로딩 시점에 PDF 미리 로드 (버튼 클릭 후 지연 방지)
+_preload_pdf = get_default_pdf_text()
 
 # ── 페이지 설정 ──────────────────────────────────────────────
 st.set_page_config(
