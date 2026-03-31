@@ -76,12 +76,12 @@ def _extract_from_bytes(file_bytes: bytes, file_name: str) -> str:
     """PDF 바이트에서 텍스트 추출. 이미지 PDF이면 안내 문구 반환."""
     with pdfplumber.open(io.BytesIO(file_bytes)) as pdf:
         pages_text = []
-        for page in pdf.pages:
+        for i, page in enumerate(pdf.pages, start=1):
             text = page.extract_text()
             if text:
-                pages_text.append(text)
+                pages_text.append(f"[{file_name} - {i}페이지]\n{text}")
 
     if not pages_text:
         return "[이 PDF는 이미지로만 구성되어 텍스트를 추출할 수 없습니다. AI가 웹 검색으로 관련 정보를 찾겠습니다.]"
 
-    return "\n".join(pages_text)
+    return "\n\n".join(pages_text)
