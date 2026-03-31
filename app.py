@@ -17,9 +17,6 @@ from tools.gemini_client import call_welfare_matching
 def get_default_pdf_text():
     return load_default_pdfs()
 
-# 앱 로딩 시점에 PDF 미리 로드 (버튼 클릭 후 지연 방지)
-_preload_pdf = get_default_pdf_text()
-
 # ── 페이지 설정 ──────────────────────────────────────────────
 st.set_page_config(
     page_title="광진구 복지서비스 매칭 시스템",
@@ -56,6 +53,9 @@ st.markdown("""
     }
 </style>
 """, unsafe_allow_html=True)
+
+# PDF 미리 로드 (버튼 클릭 후 지연 방지)
+get_default_pdf_text()
 
 # ── 헤더 ─────────────────────────────────────────────────────
 st.markdown('<div class="main-title">광진구 복지서비스 매칭 시스템</div>', unsafe_allow_html=True)
