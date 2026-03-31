@@ -54,9 +54,6 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# PDF 미리 로드 (버튼 클릭 후 지연 방지)
-get_default_pdf_text()
-
 # ── 헤더 ─────────────────────────────────────────────────────
 st.markdown('<div class="main-title">광진구 복지서비스 매칭 시스템</div>', unsafe_allow_html=True)
 st.markdown('<div class="sub-title">사회복지사 전용 · AI 기반 맞춤형 서비스 매칭 도우미</div>', unsafe_allow_html=True)
