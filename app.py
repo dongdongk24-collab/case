@@ -9,13 +9,7 @@ import os
 
 sys.path.insert(0, os.path.dirname(__file__))
 
-from tools.pdf_reader import extract_text_from_pdfs, load_default_pdfs
 from tools.gemini_client import call_welfare_matching
-
-# 기본 PDF 자동 로드 (data/ 폴더) — 앱 시작 시 미리 캐시
-@st.cache_resource(show_spinner=False)
-def get_default_pdf_text():
-    return load_default_pdfs()
 
 # ── 페이지 설정 ──────────────────────────────────────────────
 st.set_page_config(
@@ -137,21 +131,6 @@ with st.sidebar:
         label_visibility="collapsed",
     )
 
-    # ── PDF 첨부 ──
-    st.markdown('<div class="section-label">📎 복지 자료 첨부 (선택)</div>', unsafe_allow_html=True)
-    st.divider()
-    st.caption("각종 지침 45개의 자료가 기본 포함됨")
-
-    uploaded_files = st.file_uploader(
-        "PDF 업로드",
-        type=["pdf"],
-        accept_multiple_files=True,
-        help="광진구 복지 안내서, 사업안내 PDF 등",
-        label_visibility="collapsed",
-    )
-    if uploaded_files:
-        st.success(f"{len(uploaded_files)}개 파일 업로드 완료")
-
     st.divider()
     run_button = st.button(
         "복지서비스 매칭 시작",
@@ -165,8 +144,7 @@ if not run_button:
 **사용 방법**
 
 1. 왼쪽 사이드바에 민원인 기본 정보를 입력하세요
-2. 광진구, 보건복지부, 기관 등의 복지 관련 PDF가 있으면 첨부해도 됩니다
-3. **복지서비스 매칭 시작** 버튼을 누르면 AI가 분석합니다
+2. **복지서비스 매칭 시작** 버튼을 누르면 AI가 분석합니다
 
 **AI가 하는 일**
 - 광진구·서울시·전국 복지 서비스 실시간 검색
@@ -199,10 +177,7 @@ else:
 
     with st.spinner("AI가 복지서비스를 분석 중입니다... (30초~1분 소요)"):
         try:
-            default_text = get_default_pdf_text()
-            upload_text = extract_text_from_pdfs(uploaded_files) if uploaded_files else ""
-            pdf_text = "\n\n".join(filter(None, [default_text, upload_text]))
-            result = call_welfare_matching(client_data, pdf_text)
+            result = call_welfare_matching(client_data, "")
         except Exception as e:
             st.error(f"오류가 발생했습니다: {e}")
             st.stop()
